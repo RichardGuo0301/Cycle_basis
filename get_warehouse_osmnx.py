@@ -87,8 +87,37 @@ def draw_and_save_map(point, dist, filename, title, network_type='all', x_max=No
                 geom = LineString([(x1, y1), (x2, y2)])
                 length = ox.distance.great_circle(y1, x1, y2, x2)
                 G_undirected.add_edge(u_edge, v_edge, key=0, length=length, geometry=geom)
+                
+            # 6. Connect 1016142113 and 259346266
+            if 1016142113 in G_undirected and 259346266 in G_undirected:
+                u_edge, v_edge = 1016142113, 259346266
+                x1, y1 = G_undirected.nodes[u_edge]['x'], G_undirected.nodes[u_edge]['y']
+                x2, y2 = G_undirected.nodes[v_edge]['x'], G_undirected.nodes[v_edge]['y']
+                geom = LineString([(x1, y1), (x2, y2)])
+                length = ox.distance.great_circle(y1, x1, y2, x2)
+                G_undirected.add_edge(u_edge, v_edge, key=0, length=length, geometry=geom)
+                
+            # 7. Connect 60978330 and 60978331
+            if 60978330 in G_undirected and 60978331 in G_undirected:
+                u_edge, v_edge = 60978330, 60978331
+                x1, y1 = G_undirected.nodes[u_edge]['x'], G_undirected.nodes[u_edge]['y']
+                x2, y2 = G_undirected.nodes[v_edge]['x'], G_undirected.nodes[v_edge]['y']
+                geom = LineString([(x1, y1), (x2, y2)])
+                length = ox.distance.great_circle(y1, x1, y2, x2)
+                G_undirected.add_edge(u_edge, v_edge, key=0, length=length, geometry=geom)
+
+            # 8. For 1166459 nodes: remove if it's a dead end (degree == 1)
+            nodes_116 = [n for n in G_undirected.nodes() if str(n).startswith("1166459")]
+            for n in nodes_116:
+                if G_undirected.degree(n) == 1:
+                    G_undirected.remove_node(n)
+
+            # 8. Unconditionally remove specific 1166459* nodes that the user requested
+            for n in [11664593244, 11664593242, 11664593245, 11664593249]:
+                if n in G_undirected:
+                    G_undirected.remove_node(n)
             
-            print(f"[{title}] Manual surgery: applied 4 specific user cuts (loops, isolated disconnected edges) and 1 custom connection")
+            print(f"[{title}] Manual surgery: applied user cuts and conditional removals")
     # =============================
         
     # 如果指定了 x_max，剪裁掉靠东(右)侧的节点
