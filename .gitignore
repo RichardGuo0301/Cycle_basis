@@ -1,0 +1,15 @@
+# Generated outputs (too large for GitHub)
+visuals/
+cache/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# PDF (binary)
+*.pdf
+
+# macOS
+.DS_Store
